@@ -58,7 +58,6 @@ function verifyRol(rolesPermitidos) {
 
     // Retornamos una funcion que se ejecuta en la ruta
     return (req, res, next) => {
-
         // Verificamos los roles permitidos en la cabecera
         if (rolesPermitidos.includes(req.header.usuarioRol)) {
 
