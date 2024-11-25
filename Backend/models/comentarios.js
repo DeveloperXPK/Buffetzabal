@@ -8,7 +8,7 @@ const comentarioSchema = new Schema({
     // Asociamos el comentario con el usuario que lo realizo
     usuario: {
         _id: { type: Schema.Types.ObjectId, ref: 'usuarios' },
-        nombre: String,
+        username: String,
         email: String
     },
 
