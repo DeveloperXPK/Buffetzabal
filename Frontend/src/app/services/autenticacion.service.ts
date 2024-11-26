@@ -19,8 +19,9 @@ export class AutenticacionService {
     return sessionStorage.getItem(this.token);
   }
 
+  
   setUser(usuario: string): void {
-    sessionStorage.setItem(this.usuario, usuario);
+    sessionStorage.setItem(this.usuario, JSON.stringify(usuario));
   }
 
   // Necesitamos un metodo para obtener los headers
