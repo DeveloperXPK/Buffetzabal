@@ -68,7 +68,8 @@ function loginUser(req, res) {
                     // Si la contraseña es correcta, generamos un token
                     const tokenUser = token.generateToken(user);
                     res.status(200).send({
-                        "Token": tokenUser
+                        token: tokenUser,
+                        usuario: user
                     });
                 } else {
                     // Si la contraseña es incorrecta, enviamos un mensaje de error
