@@ -16,7 +16,8 @@ const comentarioSchema = new Schema({
     publicacion: {
         _id: { type: Schema.Types.ObjectId, ref: 'platos' },
         nombre: String,
-        descripcion: String
+        descripcion: String,
+        categoria: String,
     },
 
     // Definimos el contenido del comentario

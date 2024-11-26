@@ -10,6 +10,7 @@ function createPlate(req, res) {
         nombre: req.body.nombre,
         precio: req.body.precio,
         descripcion: req.body.descripcion,
+        categoria: req.body.categoria,
         imagen: req.body.imagen
     });
 
@@ -34,23 +35,17 @@ function createPlate(req, res) {
 
 // Funcion para editar un plato
 function uploadPlate(req, res) {
-    const idPlate = req.params.platoId;
 
-    // Obtenemos los datos del plato desde el body
-    const {
-        nombre,
-        precio,
-        descripcion,
-        imagen
-    } = req.body;
+    // Obtenemos el ID del plato desde los parametros (URL)
+    const idPlate = req.params.platoId;
 
     // Editamos el plato con los datos obtenidos
     const updatePlate = new Plato({
         _id: idPlate,
-        nombre: nombre,
-        precio: precio,
-        descripcion: descripcion,
-        imagen: imagen
+        nombre: req.body.nombre,
+        precio: req.body.precio,
+        descripcion: req.body.descripcion,
+        imagen: req.body.imagen
     });
 
     // Buscamos el plato por su id y lo editamos

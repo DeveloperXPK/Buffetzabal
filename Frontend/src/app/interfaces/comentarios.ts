@@ -10,6 +10,7 @@ export interface Comentarios {
         _id: string;
         nombre: string;
         descripcion: string;
+        categoria: string;
     }
     // Datos del comentario
     comentario: string;

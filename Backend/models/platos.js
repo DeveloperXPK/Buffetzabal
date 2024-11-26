@@ -7,6 +7,7 @@ const platoSchema = new Schema({
     nombre: String,
     precio: Number,
     descripcion: String,
+    categoria: String,
     imagen: String
 });
 

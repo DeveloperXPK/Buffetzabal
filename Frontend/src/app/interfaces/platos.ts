@@ -3,6 +3,7 @@ export interface Platos {
     nombre: string;
     precio: number;
     descripcion: string;
+    catetoria: string;
 }
 
 export interface Platos {
