@@ -3,13 +3,13 @@ export interface Platos {
     nombre: string;
     precio: number;
     descripcion: string;
-    catetoria: string;
+    categoria: string;
 }
 
-export interface Platos {
-    publicaciones: Platos[];
+export interface platosResponse {
+    Plato: Platos[];
 }
 
-export interface Plato {
-    publicacion: Platos;
+export interface singlePlatoResponse {
+    Plato: Platos;
 }
