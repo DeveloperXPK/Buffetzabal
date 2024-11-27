@@ -17,10 +17,10 @@ export interface Comentarios {
     fecha: Date;
 }
 
-export interface Comentarios {
+export interface comentariosResponse {
     comentarios: Comentarios[];
 }
 
-export interface Comentario {
+export interface singleComentarioResponse {
     comentario: Comentarios;
 }

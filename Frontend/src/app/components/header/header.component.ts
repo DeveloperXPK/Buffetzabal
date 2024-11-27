@@ -27,16 +27,16 @@ import { CommonModule } from '@angular/common';
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
               <li class="nav-item">
-                <a class="nav-link" routerLink="home">Inicio</a>
+                <a class="nav-link text-light" routerLink="home">Inicio</a>
               </li>
               <li *ngIf="!isLogged" class="nav-item">
-                <a class="nav-link" routerLink="login">Login</a>
+                <a class="nav-link text-light" routerLink="login">Login</a>
               </li>
               <li *ngIf="!isLogged" class="nav-item">
-                <a class="nav-link" routerLink="register">Registro</a>
+                <a class="nav-link text-light" routerLink="register">Registro</a>
               </li>
               <li *ngIf="isLogged" class="nav-item">
-                <a class="nav-link" (click)="logout()">Cerrar Sesion</a>
+                <a class="nav-link text-light" (click)="logout()">Cerrar Sesion</a>
               </li>
             </ul>
           </div>
