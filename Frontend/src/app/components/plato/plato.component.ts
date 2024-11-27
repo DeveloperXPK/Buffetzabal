@@ -7,6 +7,7 @@ import { PlatosService } from '../../services/platos.service';
 import { CommonModule } from '@angular/common';
 import { ComentariosService } from '../../services/comentarios.service';
 import { FormsModule } from '@angular/forms';
+import moment from 'moment';
 
 @Component({
   selector: 'app-plato',
@@ -96,7 +97,16 @@ export class PlatoComponent implements OnInit {
       this.platoService.getSinglePlatoResponse(idPlato).subscribe({
         next: (res) => {
           this.plato = res.Plato;
-          this.comentarios = res.Comentarios;
+
+          /**
+           * Mapeamos los comentarios para agregarles un formato de fecha
+           * con moment.js. Asi podemos mostrar la fecha en un formato
+           * más amigable para el usuario. Ejm: 12/12/2021 12:00
+           */
+          this.comentarios = res.Comentarios.map(comentario => ({
+            ...comentario,
+            fecha: moment(comentario.fecha).format('DD/MM/YYYY HH:mm')
+          }));
           console.log('Plato', this.plato);
           console.log('Comentarios', this.comentarios);
 

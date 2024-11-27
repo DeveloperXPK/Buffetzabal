@@ -14,7 +14,7 @@ export interface Comentarios {
     }
     // Datos del comentario
     comentario: string;
-    fecha: Date;
+    fecha: string; // Fecha de creación del comentario
 }
 
 export interface comentariosResponse {
