@@ -6,11 +6,12 @@ import { Comentarios } from '../../interfaces/comentarios';
 import { PlatosService } from '../../services/platos.service';
 import { CommonModule } from '@angular/common';
 import { ComentariosService } from '../../services/comentarios.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-plato',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   template: `
     <div class="container mt-5" *ngIf="plato && comentarios">
       <div class="card">
@@ -49,7 +50,7 @@ import { ComentariosService } from '../../services/comentarios.service';
           >
             <h6>
               {{ comentario.usuario.username }}
-              <small class="text-muted">- {{ comentario.fecha }}</small>
+              <small class="text-muted"> {{ comentario.fecha }}</small>
             </h6>
             <p>{{comentario.comentario}}</p>
           </div>
@@ -57,24 +58,16 @@ import { ComentariosService } from '../../services/comentarios.service';
 
         <form class="mt-4">
           <div class="mb-3">
-            <label for="nombre" class="form-label">Tu nombre</label>
-            <input
-              type="text"
-              class="form-control"
-              id="nombre"
-              placeholder="Ingresa tu nombre"
-            />
-          </div>
-          <div class="mb-3">
             <label for="comentario" class="form-label">Tu comentario</label>
             <textarea
               class="form-control"
-              id="comentario"
+              name="comentario"
               rows="3"
-              placeholder="Escribe tu comentario"
+              placeholder="Escribe un comentario"
+              [(ngModel)]="comentario"
             ></textarea>
           </div>
-          <button type="submit" class="btn btn-primary">
+          <button type="submit" class="btn btn-primary" (click)="crearComentario()">
             Enviar comentario
           </button>
         </form>
@@ -85,6 +78,8 @@ import { ComentariosService } from '../../services/comentarios.service';
 export class PlatoComponent implements OnInit {
   plato?: Platos; // Definimos la variable plato como un objeto de tipo Platos
   comentarios: Comentarios[] = []; // Definimos la variable comentarios como un arreglo de objetos de tipo Comentarios
+
+  public comentario: string = ''; // Definimos la variable comentario como un string
 
   constructor(
     private route: ActivatedRoute,
@@ -98,17 +93,51 @@ export class PlatoComponent implements OnInit {
     const idPlato = this.route.snapshot.paramMap.get('platoId');
 
     if (idPlato) {
-      this.platoService.getPlato(idPlato).subscribe({
+      this.platoService.getSinglePlatoResponse(idPlato).subscribe({
         next: (res) => {
           this.plato = res.Plato;
           this.comentarios = res.Comentarios;
           console.log('Plato', this.plato);
           console.log('Comentarios', this.comentarios);
+
+          this.platoService.setPlato(this.plato);
         },
         error: (err) => {
           console.error('Error al obtener datos', err);
         },
       });
+    }
+  }
+
+  crearComentario() {
+    const idPlato = this.route.snapshot.paramMap.get('platoId');
+
+    const body = {
+      comentario: this.comentario,
+      usuario: this.autenticacion.getUser(),
+      publicacion: this.platoService.getPlato(),
+    }
+
+    if(
+      !this.comentario
+    ) {
+      alert('Debes escribir un comentario');
+      return;
+    } else if(!this.autenticacion.isAuthenticated()) {
+      alert('Debes iniciar sesión para comentar');
+      this.router.navigate(['/login']);
+    }
+
+    if(idPlato){
+      this.comentarioService.createComentario(idPlato, body).subscribe({
+        next: (res) => {
+          console.log('Comentario creado', res);
+          this.comentario = '';
+        },
+        error: (err) => {
+          console.error('Error al crear comentario', err);
+        }
+      })
     }
   }
 }

@@ -2,11 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AutenticacionService } from './autenticacion.service';
-import { comentariosResponse, singleComentarioResponse } from '../interfaces/comentarios';
+import {
+  Comentarios,
+  comentariosResponse,
+  singleComentarioResponse,
+} from '../interfaces/comentarios';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ComentariosService {
   private comenatiossKey: string = 'session_comentario'; // Key para almacenar los platos en el localStorage
@@ -19,10 +23,16 @@ export class ComentariosService {
     private autenticacion: AutenticacionService
   ) {}
 
-  getComentario(platoId: string, comentarioId: string): Observable<singleComentarioResponse> {
-    return this.http.get<singleComentarioResponse>(`${this.urlPlatos}/${platoId}/${comentarioId}`, {
-      headers: this.autenticacion.getHeaders(),
-    });
+  getComentario(
+    platoId: string,
+    comentarioId: string
+  ): Observable<singleComentarioResponse> {
+    return this.http.get<singleComentarioResponse>(
+      `${this.urlPlatos}/${platoId}/${comentarioId}`,
+      {
+        headers: this.autenticacion.getHeaders(),
+      }
+    );
   }
 
   getAllComentarios(): Observable<comentariosResponse> {
@@ -31,8 +41,14 @@ export class ComentariosService {
     });
   }
 
-  deletePost(id: string): Observable<singleComentarioResponse> {
+  deleteComentario(id: string): Observable<singleComentarioResponse> {
     return this.http.delete<singleComentarioResponse>(`${this.url}/${id}`, {
+      headers: this.autenticacion.getHeaders(),
+    });
+  }
+
+  createComentario(platoId: string, comentarioInfo: any ): Observable<Comentarios> {
+    return this.http.post<Comentarios>(`${this.urlPlatos}/${platoId}/comentarios`, comentarioInfo,  {
       headers: this.autenticacion.getHeaders(),
     });
   }
