@@ -18,11 +18,17 @@ routes.post('/login', authenticationController.loginUser);
 
 
 // Definimos la ruta de los platos
-routes.post('/platos', token.verifyToken, platosController.createPlate);
-routes.put('/platos/:platoId', token.verifyToken, platosController.uploadPlate);
+routes.post('/platos', token.verifyToken, platosController.createPlate); // Creamos un nuevo plato
+routes.put('/platos/:platoId', token.verifyToken, platosController.uploadPlate); // Editamos un plato por su id
+routes.get('/platos/:platoId', platosController.getPlateById); // Obtenemos un plato por su id
+routes.get('/platos', platosController.getPlates); // Obtenemos todos los platos
+routes.delete('/platos/:platoId', token.verifyToken, platosController.deletePlateById); // Eliminamos un plato por su id
 
 // Definimos la ruta de los comentarios
+routes.delete('/platos/:platoId/:comentarioId', token.verifyToken, comentariosController.deleteComment);
 routes.post('/platos/:platoId/comentarios', token.verifyToken, comentariosController.createComment);
 routes.put('/platos/:platoId/comentarios/:comentarioId', token.verifyToken, comentariosController.editComment);
+routes.get('/platos/:platoId', comentariosController.getComments);
+routes.get('/platos/:platoId/:comentarioId', comentariosController.getCommentById);
 
 module.exports = routes;
