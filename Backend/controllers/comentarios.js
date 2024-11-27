@@ -65,6 +65,7 @@ function editComment(req, res) {
         comentario: comentario
     });
 
+    // Buscamos el comentario por su id y lo editamos
     Comentario.findByIdAndUpdate(idComment, updateComment, { new: true })
         .then(
             // Si se edito correctamente, enviamos un mensaje de exito
@@ -89,7 +90,7 @@ function deleteComment(req, res) {
     // Obtenemos el id del comentario a eliminar desde la url
     const idComment = req.params.comentarioId;
 
-    Comentario.findByIdAndDelete(idComment)
+    Comentario.findByIdAndDelete(idComment) // Buscamos el comentario por su id y lo eliminamos
         .then(
             comentario => {
                 res.status(200).send({
@@ -107,7 +108,7 @@ function deleteComment(req, res) {
 
 // Obtengamos todos los comentarios
 function getComments(req, res) {
-    Comentario.find()
+    Comentario.find() // Buscamos todos los comentarios
         .then(
             comentarios => {
                 res.status(200).send({ Comentarios: comentarios });
@@ -123,10 +124,9 @@ function getComments(req, res) {
 
 // Obtengamos un comentario por su ID
 function getCommentById(req, res) {
+    const idComment = req.params.comentarioId // Obtenemos el id del comentario desde los parametros (URL)
 
-    const idComment = req.params.comentarioId
-
-    Comentario.findById(idComment)
+    Comentario.findById(idComment) // Buscamos el comentario por su id
         .then(
             comentario => {
                 res.status(200).send({ Comentario: comentario });
