@@ -10,11 +10,11 @@ export interface Platos {
 }
 
 export interface platosResponse {
-    Plato: Platos[];
+    platos: Platos[];
 }
 
 export interface singlePlatoResponse {
-    Plato: Platos;
+    platos: Platos;
 
     /**
      * Se debe utilizar la sintaxis de comentariosResponse["comentarios"] para acceder a los comentarios

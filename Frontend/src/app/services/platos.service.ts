@@ -19,9 +19,9 @@ export class PlatosService {
   ) {}
 
   // Metodo para almacenar un plato en el localStorage
-  setPlato(plato: any): void {
+  setPlato(platoInfo: any): void {
     // Se parsea como string el objeto plato y se almacena en el localStorage
-    localStorage.setItem(this.platosKey, JSON.stringify(plato));
+    localStorage.setItem(this.platosKey, JSON.stringify(platoInfo));
   }
 
   // Metodo para obtener un plato del localStorage

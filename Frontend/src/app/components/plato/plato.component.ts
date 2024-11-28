@@ -96,7 +96,7 @@ export class PlatoComponent implements OnInit {
     if (idPlato) {
       this.platoService.getSinglePlatoResponse(idPlato).subscribe({
         next: (res) => {
-          this.plato = res.Plato;
+          this.plato = res.platos;
 
           /**
            * Mapeamos los comentarios para agregarles un formato de fecha

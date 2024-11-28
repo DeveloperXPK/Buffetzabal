@@ -55,6 +55,7 @@ export class AutenticacionService {
   clearSession(): void {
     sessionStorage.removeItem(this.token);
     sessionStorage.removeItem(this.usuario);
+    localStorage.removeItem('session_platos');
     this.autenticado.next(false);
   }
 }

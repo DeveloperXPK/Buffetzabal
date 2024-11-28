@@ -73,9 +73,8 @@ function uploadPlate(req, res) {
 function getPlates(req, res) {
     Plato.find() // Buscamos todos los platos
         .then(
-            (plates) => {
-                res.status(200).send({ Platos: plates });
-
+            (platos) => {
+                res.status(200).send({ platos: platos });
             },
             (err) => {
                 res.status(500).send({
@@ -92,7 +91,7 @@ function getPlateById(req, res) {
 
     Plato.findById(idPlato) // Buscamos el plato por su id
         .then(
-            (plate) => {
+            (plato) => {
 
                 /**
                  * Al obtener el plato, buscamos los comentarios asociados a ese plato
@@ -101,7 +100,7 @@ function getPlateById(req, res) {
                 comentarios.find({ "publicacion._id": mongoose.Types.ObjectId(idPlato) })
                     .then(
                         (comments) => {
-                            res.status(200).send({ Plato: plate, Comentarios: comments });
+                            res.status(200).send({ platos: plato, Comentarios: comments });
                         },
                         (err) => {
                             res.status(500).send({
@@ -126,8 +125,8 @@ function getPlatesByCategory(req, res) {
 
     Plato.find({ categoria: categoria }) // Buscamos los platos por categoria
         .then(
-            (plates) => {
-                res.status(200).send({ Platos: plates });
+            (plato) => {
+                res.status(200).send({ platos: plato });
             },
             (err) => {
                 res.status(500).send({
@@ -147,10 +146,10 @@ function deletePlateById(req, res) {
     // Buscamos el plato por su id y lo eliminamos
     Plato.findByIdAndDelete(idPlato)
         .then(
-            (plate) => {
+            (plato) => {
                 res.status(200).send({
                     Accion: 'Plato eliminado',
-                    Plato: plate
+                    plato: plato
                 });
             },
             err => {
