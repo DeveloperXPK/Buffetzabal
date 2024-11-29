@@ -23,6 +23,14 @@ export class ComentariosService {
     private autenticacion: AutenticacionService
   ) {}
 
+  setComentario(comentario: any): void {
+    localStorage.setItem(this.comenatiossKey, JSON.stringify(comentario));
+  }
+
+  getComentarios(): any {
+    return JSON.parse(localStorage.getItem(this.comenatiossKey) || '{}');
+  }
+
   getComentario(
     platoId: string,
     comentarioId: string
@@ -41,15 +49,33 @@ export class ComentariosService {
     });
   }
 
-  deleteComentario(id: string): Observable<singleComentarioResponse> {
-    return this.http.delete<singleComentarioResponse>(`${this.url}/${id}`, {
-      headers: this.autenticacion.getHeaders(),
-    });
+  deleteComentario(
+    idComentario: string,
+    idPlato: string
+  ): Observable<singleComentarioResponse> {
+    return this.http.delete<singleComentarioResponse>(
+      `${this.urlPlatos}/${idPlato}/${idComentario}`,
+      {
+        headers: this.autenticacion.getHeaders(),
+      }
+    );
   }
 
-  createComentario(platoId: string, comentarioInfo: any ): Observable<Comentarios> {
-    return this.http.post<Comentarios>(`${this.urlPlatos}/${platoId}/comentarios`, comentarioInfo,  {
-      headers: this.autenticacion.getHeaders(),
-    });
+  createComentario(
+    platoId: string,
+    comentarioInfo: any
+  ): Observable<Comentarios> {
+    return this.http.post<Comentarios>(
+      `${this.urlPlatos}/${platoId}/comentarios`,
+      comentarioInfo,
+      {
+        headers: this.autenticacion.getHeaders(),
+      }
+    );
+  }
+
+  editarComentario(idPlato: string, idComentario: string, body: any): Observable<singleComentarioResponse> {
+    return this.http.put<singleComentarioResponse>(`${this.urlPlatos}/${idPlato}/${idComentario}`, body, { headers: this.autenticacion.getHeaders()})
+
   }
 }

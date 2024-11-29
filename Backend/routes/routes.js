@@ -32,7 +32,7 @@ routes.get('/platos/:categoria', platosController.getPlatesByCategory); // Consu
 // ------------- COMENTARIOS ----------------
 // ------- CREAR, EDITAR, ELIMINAR ------------
 routes.post('/platos/:platoId/comentarios', token.verifyToken, comentariosController.createComment); // Crear un nuevo comentario
-routes.put('/platos/:platoId/comentarios/:comentarioId', token.verifyToken, comentariosController.editComment); // Editar un comentario por su id
+routes.put('/platos/:platoId/:comentarioId', token.verifyToken, comentariosController.editComment); // Editar un comentario por su id
 routes.delete('/platos/:platoId/:comentarioId', token.verifyToken, comentariosController.deleteComment); // Eliminar un comentario por su id
 
 // ------- OBTENER ------------

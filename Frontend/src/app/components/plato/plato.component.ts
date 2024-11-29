@@ -15,11 +15,11 @@ import moment from 'moment';
   imports: [CommonModule, FormsModule],
   template: `
     <div class="container mt-5" *ngIf="plato && comentarios">
-      <div class="card">
+      <div class="card mb-4 shadow-sm">
         <div class="row g-0">
           <div class="col-md-4">
             <img
-              src="{{plato.imagen}}"
+              src="{{ plato.imagen }}"
               class="img-fluid rounded-start"
               alt="Imagen del plato"
             />
@@ -31,7 +31,7 @@ import moment from 'moment';
                 <strong>Categoría:</strong> {{ plato.categoria }}
               </p>
               <p class="card-text">
-                <strong>Precio:</strong> {{ plato.precio }}
+                <strong>Precio:</strong> {{ plato.precio | currency }}
               </p>
               <p class="card-text">
                 <strong>Descripción:</strong> {{ plato.descripcion }}
@@ -45,19 +45,35 @@ import moment from 'moment';
         <h4 class="text-secondary">Comentarios</h4>
         <!-- Comentarios Existentes -->
         <div class="list-group">
+          
           <div
-            class="list-group-item"
+            class="list-group-item list-group-item-action flex-column align-items-start mb-2"
             *ngFor="let comentario of comentarios; trackById"
           >
-            <h6>
-              {{ comentario.usuario.username }}
-              <small class="text-muted"> {{ comentario.fecha }}</small>
-            </h6>
-            <p>{{comentario.comentario}}</p>
+            <div class="d-flex w-100 justify-content-between">
+              <h6 class="mb-1">{{ comentario.usuario.username }}</h6>
+              <small class="text-muted">{{ comentario.fecha }}</small>
+            </div>
+            <p class="mb-1">{{ comentario.comentario }}</p>
+            <div class="d-flex justify-content-end">
+              <button
+                class="btn btn-outline-danger btn-sm mx-1"
+                *ngIf="isOwner(comentario)"
+                (click)="eliminarComentario(comentario._id)"
+              >
+                Eliminar
+              </button>
+              <button
+                class="btn btn-outline-primary btn-sm"
+                *ngIf="isOwner(comentario)"
+              >
+                Editar
+              </button>
+            </div>
           </div>
         </div>
 
-        <form class="mt-4">
+        <form class="mt-4" (ngSubmit)="crearComentario()">
           <div class="mb-3">
             <label for="comentario" class="form-label">Tu comentario</label>
             <textarea
@@ -66,9 +82,10 @@ import moment from 'moment';
               rows="3"
               placeholder="Escribe un comentario"
               [(ngModel)]="comentario"
+              required
             ></textarea>
           </div>
-          <button type="submit" class="btn btn-primary" (click)="crearComentario()">
+          <button type="submit" class="btn btn-primary">
             Enviar comentario
           </button>
         </form>
@@ -83,7 +100,7 @@ export class PlatoComponent implements OnInit {
   public comentario: string = ''; // Definimos la variable comentario como un string
 
   constructor(
-    private route: ActivatedRoute,
+    private route: ActivatedRoute, // Para obtener los parametros de la URL por snapshot
     private router: Router,
     private autenticacion: AutenticacionService,
     private platoService: PlatosService,
@@ -103,17 +120,15 @@ export class PlatoComponent implements OnInit {
            * con moment.js. Asi podemos mostrar la fecha en un formato
            * más amigable para el usuario. Ejm: 12/12/2021 12:00
            */
-          if(res.Comentarios){
-            this.comentarios = res.Comentarios.map(comentario => ({
+          if (res.Comentarios) {
+            this.comentarios = res.Comentarios.map((comentario) => ({
               ...comentario,
-              fecha: moment(comentario.fecha).format('DD/MM/YYYY HH:mm')
+              fecha: moment(comentario.fecha).format('DD/MM/YYYY HH:mm'),
             }));
           }
-          
-          console.log('Plato', this.plato);
-          console.log('Comentarios', this.comentarios);
 
           this.platoService.setPlato(this.plato);
+          this.comentarioService.setComentario(this.comentarios);
         },
         error: (err) => {
           console.error('Error al obtener datos', err);
@@ -129,19 +144,17 @@ export class PlatoComponent implements OnInit {
       comentario: this.comentario,
       usuario: this.autenticacion.getUser(),
       publicacion: this.platoService.getPlato(),
-    }
+    };
 
-    if(
-      !this.comentario
-    ) {
+    if (!this.comentario) {
       alert('Debes escribir un comentario');
       return;
-    } else if(!this.autenticacion.isAuthenticated()) {
+    } else if (!this.autenticacion.isAuthenticated()) {
       alert('Debes iniciar sesión para comentar');
       this.router.navigate(['/login']);
     }
 
-    if(idPlato){
+    if (idPlato) {
       this.comentarioService.createComentario(idPlato, body).subscribe({
         next: (res) => {
           console.log('Comentario creado', res);
@@ -149,8 +162,61 @@ export class PlatoComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error al crear comentario', err);
-        }
-      })
+        },
+      });
     }
   }
+
+  isOwner(comentario: Comentarios) {
+    const user = this.autenticacion.getUser();
+    return user && user._id === comentario.usuario._id || user.rol === 'admin';
+  }
+
+  eliminarComentario(id: string) {
+    if(this.plato){
+      this.comentarioService.deleteComentario(id, this.plato._id).subscribe({
+        next:
+          (res) => {
+            console.log('Comentario eliminado', res);
+          },
+        error:
+          (err) => {
+            console.error('Error al eliminar comentario', err);
+          }
+      });
+    }
+  }
+
+  editarComentario() {
+    const idPlato = this.route.snapshot.paramMap.get('platoId');
+    const idComentario = this.route.snapshot.paramMap.get('comentarioId') || '';
+
+    const body = {
+      _id: idComentario,
+      comentario: this.comentario,
+      usuario: this.autenticacion.getUser(),
+      publicacion: this.platoService.getPlato(),
+    };
+
+    if (!this.comentario) {
+      alert('Debes escribir un comentario');
+      return;
+    } else if (!this.autenticacion.isAuthenticated()) {
+      alert('Debes iniciar sesión para comentar');
+      this.router.navigate(['/login']);
+    }
+
+    if (idPlato) {
+      this.comentarioService.editarComentario(idPlato, idComentario ,body).subscribe({
+        next: (res) => {
+          console.log('Comentario editado', res);
+          this.comentario = '';
+        },
+        error: (err) => {
+          console.error('Error al crear comentario', err);
+        },
+      });
+    }
+  }
+
 }
