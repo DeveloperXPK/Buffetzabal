@@ -103,10 +103,13 @@ export class PlatoComponent implements OnInit {
            * con moment.js. Asi podemos mostrar la fecha en un formato
            * más amigable para el usuario. Ejm: 12/12/2021 12:00
            */
-          this.comentarios = res.Comentarios.map(comentario => ({
-            ...comentario,
-            fecha: moment(comentario.fecha).format('DD/MM/YYYY HH:mm')
-          }));
+          if(res.Comentarios){
+            this.comentarios = res.Comentarios.map(comentario => ({
+              ...comentario,
+              fecha: moment(comentario.fecha).format('DD/MM/YYYY HH:mm')
+            }));
+          }
+          
           console.log('Plato', this.plato);
           console.log('Comentarios', this.comentarios);
 

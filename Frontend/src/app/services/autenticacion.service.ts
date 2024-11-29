@@ -28,13 +28,13 @@ export class AutenticacionService {
   }
 
   // Enviamos el usuario al sessionStorage
-  setUser(usuario: string): void {
+  setUser(usuario: any): void {
     sessionStorage.setItem(this.usuario, JSON.stringify(usuario));
   }
 
   // Obtenemos el usuario del sessionStorage
-  getUser(): string | null {
-    return sessionStorage.getItem(this.usuario);
+  getUser(): any {
+    return JSON.parse(sessionStorage.getItem(this.usuario) || '{}');
   }
 
   // Necesitamos un metodo para obtener los headers
