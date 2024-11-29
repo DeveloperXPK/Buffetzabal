@@ -74,8 +74,15 @@ export class ComentariosService {
     );
   }
 
-  editarComentario(idPlato: string, idComentario: string, body: any): Observable<singleComentarioResponse> {
-    return this.http.put<singleComentarioResponse>(`${this.urlPlatos}/${idPlato}/${idComentario}`, body, { headers: this.autenticacion.getHeaders()})
-
+  editarComentario(
+    idPlato: string,
+    idComentario: string,
+    body: any
+  ): Observable<singleComentarioResponse> {
+    return this.http.put<singleComentarioResponse>(
+      `${this.urlPlatos}/${idPlato}/${idComentario}`,
+      body,
+      { headers: this.autenticacion.getHeaders() }
+    );
   }
 }

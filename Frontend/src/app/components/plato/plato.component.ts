@@ -129,7 +129,7 @@ export class PlatoComponent implements OnInit {
           }
 
           this.platoService.setPlato(this.plato);
-          // this.comentarioService.setComentario(this.comentarios);
+          this.comentarioService.setComentario(this.comentarios);
         },
         error: (err) => {
           console.error('Error al obtener datos', err);
