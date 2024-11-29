@@ -1,4 +1,6 @@
 export interface Comentarios {
+    _id: string; // ID del comentario
+
     // Datos del usuario que comenta
     usuario: {
         _id: string;
