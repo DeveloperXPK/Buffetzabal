@@ -21,6 +21,6 @@ export interface singlePlatoResponse {
      * de la publicación.
      * Si se accede sola con comentariosResponse, se obtiene un error de tipo.
      */
-    Comentarios: comentariosResponse["comentarios"];
+    Comentarios?: comentariosResponse["comentarios"];
 
 }

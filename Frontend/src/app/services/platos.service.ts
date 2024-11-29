@@ -50,4 +50,10 @@ export class PlatosService {
       headers: this.autenticacion.getHeaders(),
     });
   }
+
+  crearPlato(plato: any): Observable<singlePlatoResponse> {
+    return this.http.post<singlePlatoResponse>(this.url, plato, {
+      headers: this.autenticacion.getHeaders(),
+    });
+  }
 }
