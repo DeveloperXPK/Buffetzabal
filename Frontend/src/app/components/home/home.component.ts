@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { PlatosService } from '../../services/platos.service';
 import { Router } from '@angular/router';
 import { Platos } from '../../interfaces/platos';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   template: `
     <!-- Menú de Platos -->
     <div class="container my-5">
@@ -16,27 +17,23 @@ import { Platos } from '../../interfaces/platos';
       <div class="mb-5">
         <h2 class="mb-3">Entradas</h2>
         <div class="row g-4">
-          <div class="col-md-6">
+          <div
+            class="col-md-6"
+            *ngFor="let plato of platos; trackById"
+            (click)="verPlato(plato._id)"
+          >
             <div class="card shadow">
               <div class="card-body">
-                <h5 class="card-title">Bruschetta Tradicional</h5>
+                <h5 class="card-title">{{ plato.nombre }}</h5>
                 <p class="card-text">
-                  Pan tostado con ajo, tomates frescos, albahaca y un toque de
-                  aceite de oliva.
+                  {{ plato.descripcion }}
                 </p>
-                <p class="fw-bold">Precio: $25,900 COP</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="card shadow">
-              <div class="card-body">
-                <h5 class="card-title">Crema de Calabaza</h5>
-                <p class="card-text">
-                  Suave crema elaborada con calabaza fresca, un toque de nuez
-                  moscada y servida con crotones.
+                <p class="fw-bold">
+                  Precio:
+                  {{
+                    plato.precio | currency : 'COP' : 'symbol-narrow' : '1.0-0'
+                  }}
                 </p>
-                <p class="fw-bold">Precio: $19,500 COP</p>
               </div>
             </div>
           </div>
@@ -109,7 +106,6 @@ import { Platos } from '../../interfaces/platos';
       <div class="mb-5">
         <h2 class="mb-3">Bebidas</h2>
         <div class="row g-4">
-
           <div class="col-md-6">
             <div class="card shadow">
               <div class="card-body">
@@ -134,8 +130,6 @@ import { Platos } from '../../interfaces/platos';
               </div>
             </div>
           </div>
-
-          
         </div>
       </div>
     </div>
@@ -145,17 +139,19 @@ export class HomeComponent implements OnInit {
   platos: Platos[] = [];
   constructor(private platosService: PlatosService, private router: Router) {}
 
-  ngOnInit(){
+  ngOnInit() {
     this.platosService.getPlatosResponse().subscribe({
-      next: 
-      (res) => {
-        console.log(res);
+      next: (res) => {
         this.platos = res.platos;
         console.log(this.platos);
       },
       error: (err) => {
         console.log(err);
-      }
-    })
+      },
+    });
+  }
+
+  verPlato(idPlato: string) {
+    this.router.navigate(['/plato', idPlato]);
   }
 }
