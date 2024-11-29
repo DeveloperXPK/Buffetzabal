@@ -53,6 +53,7 @@ import { HttpClient } from '@angular/common/http';
           </select>
         </div>
         <button type="submit" class="btn btn-primary" (click)="crearPlato()">Crear Plato</button>
+        <button class="btn btn-primary mx-3" (click)="volver()">Volver</button>
       </form>
     </div>
   `,
@@ -89,5 +90,9 @@ export class CrearPlatoComponent {
       },
     });
     
+  }
+
+  volver(){
+    this.router.navigate(['home']);
   }
 }

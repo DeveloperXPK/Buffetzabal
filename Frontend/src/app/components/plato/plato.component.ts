@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AutenticacionService } from '../../services/autenticacion.service';
 import { Platos } from '../../interfaces/platos';
 import { Comentarios } from '../../interfaces/comentarios';
@@ -31,7 +31,10 @@ import moment from 'moment';
                 <strong>Categoría:</strong> {{ plato.categoria }}
               </p>
               <p class="card-text">
-                <strong>Precio:</strong> {{ plato.precio | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+                <strong>Precio:</strong>
+                {{
+                  plato.precio | currency : 'COP' : 'symbol-narrow' : '1.0-0'
+                }}
               </p>
               <p class="card-text">
                 <strong>Descripción:</strong> {{ plato.descripcion }}
@@ -45,7 +48,6 @@ import moment from 'moment';
         <h4 class="text-secondary">Comentarios</h4>
         <!-- Comentarios Existentes -->
         <div class="list-group">
-          
           <div
             class="list-group-item list-group-item-action flex-column align-items-start mb-2"
             *ngFor="let comentario of comentarios; trackById"
@@ -88,6 +90,9 @@ import moment from 'moment';
           </div>
           <button type="submit" class="btn btn-primary">
             Enviar comentario
+          </button>
+          <button class="btn btn-primary mx-3" (click)="volverInicio()">
+            Volver
           </button>
         </form>
       </div>
@@ -170,20 +175,20 @@ export class PlatoComponent implements OnInit {
 
   isOwner(comentario: Comentarios) {
     const user = this.autenticacion.getUser();
-    return user && user._id === comentario.usuario._id || user.rol === 'admin';
+    return (
+      (user && user._id === comentario.usuario._id) || user.rol === 'admin'
+    );
   }
 
   eliminarComentario(id: string) {
-    if(this.plato){
+    if (this.plato) {
       this.comentarioService.deleteComentario(id, this.plato._id).subscribe({
-        next:
-          (res) => {
-            console.log('Comentario eliminado', res);
-          },
-        error:
-          (err) => {
-            console.error('Error al eliminar comentario', err);
-          }
+        next: (res) => {
+          console.log('Comentario eliminado', res);
+        },
+        error: (err) => {
+          console.error('Error al eliminar comentario', err);
+        },
       });
     }
   }
@@ -191,5 +196,9 @@ export class PlatoComponent implements OnInit {
   verComentario(idComentario: string) {
     const idPlato = this.route.snapshot.paramMap.get('platoId');
     this.router.navigate(['/plato', idPlato, idComentario]);
+  }
+
+  volverInicio() {
+    this.router.navigate(['/home']);
   }
 }

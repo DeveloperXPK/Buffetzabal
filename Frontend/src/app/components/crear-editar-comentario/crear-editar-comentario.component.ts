@@ -58,6 +58,7 @@ import { Comentarios } from '../../interfaces/comentarios';
           ></textarea>
         </div>
         <button type="submit" class="btn btn-primary">Editar comentario</button>
+        <button (click)="volverPublicacion(plato._id)" class="btn btn-primary mx-3">volver</button>
       </form>
     </div>
   `,
@@ -90,7 +91,6 @@ export class CrearEditarComentarioComponent implements OnInit {
           this.comentario = this.comentario.filter(
             (comentario) => comentario._id === idComentario
           );
-          console.log('Comentarios', this.comentario);
         },
         error: (err) => {
           console.error('Error al obtener datos', err);
@@ -131,5 +131,9 @@ export class CrearEditarComentarioComponent implements OnInit {
           },
         });
     }
+  }
+
+  volverPublicacion(idPlato: string) {
+    this.router.navigate(['/plato', idPlato]);
   }
 }
