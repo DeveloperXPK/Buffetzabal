@@ -18,8 +18,20 @@ export class PlatosService {
     private autenticacion: AutenticacionService
   ) {}
 
+  // Metodo para almacenar un plato en el localStorage
+  setPlato(platoInfo: any): void {
+    // Se parsea como string el objeto plato y se almacena en el localStorage
+    localStorage.setItem(this.platosKey, JSON.stringify(platoInfo));
+  }
+
+  // Metodo para obtener un plato del localStorage
+  getPlato(): any {
+    // Se parsea como JSON el objeto almacenado en el localStorage
+    return JSON.parse(localStorage.getItem(this.platosKey) || '{}');
+  }
+
   // Metodo para obtener un plato de acuerdo a su id
-  getPlato(platoId: string): Observable<singlePlatoResponse> {
+  getSinglePlatoResponse(platoId: string): Observable<singlePlatoResponse> {
     // Declaramos la interfaz que vamos a utilizar en este caso singlePlatoResponse
     return this.http.get<singlePlatoResponse>(`${this.url}/${platoId}`, {
       headers: this.autenticacion.getHeaders(),
@@ -27,7 +39,7 @@ export class PlatosService {
   }
 
   // Metodo para obtener todos los platos registrados
-  getPlatos(): Observable<platosResponse> {
+  getPlatosResponse(): Observable<platosResponse> {
     return this.http.get<platosResponse>(this.url, {
       headers: this.autenticacion.getHeaders(),
     });
@@ -35,6 +47,12 @@ export class PlatosService {
 
   deletePost(id: string): Observable<singlePlatoResponse> {
     return this.http.delete<singlePlatoResponse>(`${this.url}/${id}`, {
+      headers: this.autenticacion.getHeaders(),
+    });
+  }
+
+  crearPlato(plato: any): Observable<singlePlatoResponse> {
+    return this.http.post<singlePlatoResponse>(this.url, plato, {
       headers: this.autenticacion.getHeaders(),
     });
   }

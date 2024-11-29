@@ -29,6 +29,9 @@ import { CommonModule } from '@angular/common';
               <li class="nav-item">
                 <a class="nav-link text-light" routerLink="home">Inicio</a>
               </li>
+              <li *ngIf="isAdmin()" class="nav-item">
+                <a class="nav-link text-light" routerLink="nuevo">Agregar plato</a>
+              </li>
               <li *ngIf="!isLogged" class="nav-item">
                 <a class="nav-link text-light" routerLink="login">Login</a>
               </li>
@@ -64,10 +67,17 @@ export class HeaderComponent implements OnInit {
         console.log('Error', err);
       },
     });
+
+    this.isAdmin()
   }
 
   logout() {
     this.autenticacion.clearSession()
     this.router.navigate(['/login']);
+  }
+
+  isAdmin(): any {
+    const rol = this.autenticacion.getUser().rol
+    return rol == "admin"
   }
 }

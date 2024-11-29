@@ -1,4 +1,6 @@
 // Proposito: Contiene las funciones para crear y editar platos
+const { default: mongoose } = require('mongoose');
+const comentarios = require('../models/comentarios');
 const Plato = require('../models/platos');
 
 
@@ -69,11 +71,10 @@ function uploadPlate(req, res) {
 
 // Funcion para obtener todos los platos
 function getPlates(req, res) {
-    Plato.find()
+    Plato.find() // Buscamos todos los platos
         .then(
-            (plates) => {
-                res.status(200).send({ Platos: plates });
-
+            (platos) => {
+                res.status(200).send({ platos: platos });
             },
             (err) => {
                 res.status(500).send({
@@ -86,16 +87,50 @@ function getPlates(req, res) {
 
 // Funcion para obtener un plato por su ID
 function getPlateById(req, res) {
-    const idPlato = req.params.platoId
+    const idPlato = req.params.platoId // Obtenemos el id del plato desde los parametros (URL)
 
-    Plato.findById(idPlato)
+    Plato.findById(idPlato) // Buscamos el plato por su id
         .then(
-            (plate) => {
-                res.status(200).send({ Plato: plate });
+            (plato) => {
+
+                /**
+                 * Al obtener el plato, buscamos los comentarios asociados a ese plato
+                 * mediante su objectId
+                 */
+                comentarios.find({ "publicacion._id": mongoose.Types.ObjectId(idPlato) })
+                    .then(
+                        (comments) => {
+                            res.status(200).send({ platos: plato, Comentarios: comments });
+                        },
+                        (err) => {
+                            res.status(500).send({
+                                "Error": "No se pudieron obtener los comentarios",
+                                message: err
+                            })
+                        }
+                    )
             },
             (err) => {
                 res.status(500).send({
                     "Error": "No se pudo obtener el plato",
+                    message: err
+                })
+            }
+        )
+}
+
+// Funcion para obtener platos por categoria
+function getPlatesByCategory(req, res) {
+    const categoria = req.params.categoria // Obtenemos la categoria desde los parametros (URL)
+
+    Plato.find({ categoria: categoria }) // Buscamos los platos por categoria
+        .then(
+            (plato) => {
+                res.status(200).send({ platos: plato });
+            },
+            (err) => {
+                res.status(500).send({
+                    "Error": "No se pudieron obtener los platos",
                     message: err
                 })
             }
@@ -111,10 +146,10 @@ function deletePlateById(req, res) {
     // Buscamos el plato por su id y lo eliminamos
     Plato.findByIdAndDelete(idPlato)
         .then(
-            (plate) => {
+            (plato) => {
                 res.status(200).send({
                     Accion: 'Plato eliminado',
-                    Plato: plate
+                    plato: plato
                 });
             },
             err => {
@@ -131,5 +166,6 @@ module.exports = {
     uploadPlate,
     getPlates,
     getPlateById,
+    getPlatesByCategory,
     deletePlateById
 }

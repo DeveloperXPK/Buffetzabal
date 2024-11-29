@@ -1,4 +1,6 @@
 export interface Comentarios {
+    _id: string; // ID del comentario
+
     // Datos del usuario que comenta
     usuario: {
         _id: string;
@@ -14,7 +16,7 @@ export interface Comentarios {
     }
     // Datos del comentario
     comentario: string;
-    fecha: Date;
+    fecha: string; // Fecha de creación del comentario
 }
 
 export interface comentariosResponse {
