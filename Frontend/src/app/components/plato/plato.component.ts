@@ -31,7 +31,7 @@ import moment from 'moment';
                 <strong>Categoría:</strong> {{ plato.categoria }}
               </p>
               <p class="card-text">
-                <strong>Precio:</strong> {{ plato.precio | currency }}
+                <strong>Precio:</strong> {{ plato.precio | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
               </p>
               <p class="card-text">
                 <strong>Descripción:</strong> {{ plato.descripcion }}
@@ -66,6 +66,7 @@ import moment from 'moment';
               <button
                 class="btn btn-outline-primary btn-sm"
                 *ngIf="isOwner(comentario)"
+                (click)="verComentario(comentario._id)"
               >
                 Editar
               </button>
@@ -128,7 +129,7 @@ export class PlatoComponent implements OnInit {
           }
 
           this.platoService.setPlato(this.plato);
-          this.comentarioService.setComentario(this.comentarios);
+          // this.comentarioService.setComentario(this.comentarios);
         },
         error: (err) => {
           console.error('Error al obtener datos', err);
@@ -187,36 +188,8 @@ export class PlatoComponent implements OnInit {
     }
   }
 
-  editarComentario() {
+  verComentario(idComentario: string) {
     const idPlato = this.route.snapshot.paramMap.get('platoId');
-    const idComentario = this.route.snapshot.paramMap.get('comentarioId') || '';
-
-    const body = {
-      _id: idComentario,
-      comentario: this.comentario,
-      usuario: this.autenticacion.getUser(),
-      publicacion: this.platoService.getPlato(),
-    };
-
-    if (!this.comentario) {
-      alert('Debes escribir un comentario');
-      return;
-    } else if (!this.autenticacion.isAuthenticated()) {
-      alert('Debes iniciar sesión para comentar');
-      this.router.navigate(['/login']);
-    }
-
-    if (idPlato) {
-      this.comentarioService.editarComentario(idPlato, idComentario ,body).subscribe({
-        next: (res) => {
-          console.log('Comentario editado', res);
-          this.comentario = '';
-        },
-        error: (err) => {
-          console.error('Error al crear comentario', err);
-        },
-      });
-    }
+    this.router.navigate(['/plato', idPlato, idComentario]);
   }
-
 }

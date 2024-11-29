@@ -56,6 +56,7 @@ export class AutenticacionService {
     sessionStorage.removeItem(this.token);
     sessionStorage.removeItem(this.usuario);
     localStorage.removeItem('session_platos');
+    localStorage.removeItem('session_comentario');
     this.autenticado.next(false);
   }
 }
